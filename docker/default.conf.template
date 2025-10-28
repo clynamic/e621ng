@@ -1,3 +1,5 @@
+resolver 127.0.0.11 valid=10s ipv6=off;
+
 server {
   listen ${NGINX_PORT};
   server_name localhost;
@@ -41,7 +43,8 @@ server {
   }
 
   location @app_server {
-    proxy_pass http://app_server;
+    set $upstream_e621 e621:9000;
+    proxy_pass http://$upstream_e621;
     proxy_redirect off;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header Host $host:$server_port;
@@ -58,6 +61,3 @@ server {
   error_page 500 502 503 504 /500.html;
 }
 
-upstream app_server {
-  server e621:9000;
-}
